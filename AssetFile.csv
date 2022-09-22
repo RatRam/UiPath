@@ -1,2 +1,3 @@
 ﻿name,type,value
 TestValue,text,I am testing Value 2
+Test2,credential,MainframeUser::Test1
