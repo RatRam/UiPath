@@ -1,0 +1,6 @@
+[2022-08-31 09:15:22.701392  6d44][ERROR ] no such column: unused1:
+SELECT unused1 FROM "user";
+[2022-08-31 09:15:22.702395  6d44][ERROR ] no such column: softkeyboardSet:
+SELECT softkeyboardSet FROM profile;
+[2022-08-31 09:15:22.993461  6d44][ERROR ] no such column: password:
+SELECT password FROM cert;
