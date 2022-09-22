@@ -61,6 +61,14 @@ jobs:
                 & "C:\\uipathcli\\lib\\net461\\uipcli.exe" package deploy $file.FullName "${{env.Orch_URL}}" "${{ env.Tenant }}" -A ${{env.Account_Name}} -I ${{env.Client_ID}} -S "${{env.Client_Secret}}" -o "Shared" --applicationScope "${{env.Client_Scope}}"
           }
       - name: Upload Assets
+
+        #The column names are required! Only the first column is used but you need to at least have empty columns in place.
+        #name,type,value
+        #asset_1_name,boolean,false # we can have comments
+        #asset_2_name,integer,
+        #asset_3_name,text,
+        #asset_4_name,credential,username::password
+
         run: |
           foreach($file in Get-ChildItem -Path ${{ github.workspace }} -Recurse -Filter Asset*.csv -File)
           {
