@@ -1,11 +1,3 @@
-﻿name,type,value,,,,,,,,
+﻿name,type,value
 TestValue,text,"
-I am testing Value 2",,,,,,,,"name,type,value
-
-asset_1_name,boolean,false # we can have comments
-
-asset_2_name,integer,
-
-asset_3_name,text,
-
-asset_4_name,credential,username::password"
+I am testing Value 2"
