@@ -24,6 +24,7 @@ jobs:
       Client_ID: ${{ Secrets.OAUTH_CLIENT_ID }} 
       Client_Secret: ${{ Secrets.OAUTH_CLIENT_SECRET }}
       Client_Scope: ${{ Secrets.OAUTH_CLIENT_SCOPES }}
+      Orch_Folder: ${{ Secrets.ORCH_FOLDER }}
       FName: ""
     needs: remove-old-artifacts
     
@@ -58,7 +59,7 @@ jobs:
           foreach($file in Get-ChildItem -Path ${{ github.workspace }} -Recurse -Filter *.nupkg -File)
           {
                 echo $file.FullName
-                & "C:\\uipathcli\\lib\\net461\\uipcli.exe" package deploy $file.FullName "${{env.Orch_URL}}" "${{ env.Tenant }}" -A ${{env.Account_Name}} -I ${{env.Client_ID}} -S "${{env.Client_Secret}}" -o "Shared" --applicationScope "${{env.Client_Scope}}"
+                & "C:\\uipathcli\\lib\\net461\\uipcli.exe" package deploy $file.FullName "${{env.Orch_URL}}" "${{ env.Tenant }}" -A ${{env.Account_Name}} -I ${{env.Client_ID}} -S "${{env.Client_Secret}}" -o "${{env.Orch_Folder}}" --applicationScope "${{env.Client_Scope}}"
           }
       - name: Upload Assets
 
@@ -70,10 +71,10 @@ jobs:
         #asset_4_name,credential,username::password
 
         run: |
-          foreach($file in Get-ChildItem -Path ${{ github.workspace }} -Recurse -Filter Asset*.csv -File)
+          foreach($file in Get-ChildItem -Path ${{ github.workspace }} -Recurse -Filter *Asset*.csv -File)
           {
                 echo $file.FullName
-                & "C:\\uipathcli\\lib\\net461\\uipcli.exe" asset deploy $file.FullName "${{env.Orch_URL}}" "${{ env.Tenant }}" -A ${{env.Account_Name}} -I ${{env.Client_ID}} -S "${{env.Client_Secret}}" -o "Shared" --applicationScope "${{env.Client_Scope}}"
+                & "C:\\uipathcli\\lib\\net461\\uipcli.exe" asset deploy $file.FullName "${{env.Orch_URL}}" "${{ env.Tenant }}" -A ${{env.Account_Name}} -I ${{env.Client_ID}} -S "${{env.Client_Secret}}" -o "${{env.Orch_Folder}}" --applicationScope "${{env.Client_Scope}}"
           }
               
      # Persist build artifacts
