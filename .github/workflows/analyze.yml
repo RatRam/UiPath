@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Dev Workflow
+on:
+  workflow_dispatch
+
+jobs:
+  remove-old-artifacts:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: '1 month'      
+        
+  build:
+    runs-on: windows-latest
+    environment: Development
+    env:
+      Orch_URL: ${{ Secrets.ORCH_URL }}
+      Tenant: ${{ Secrets.TENANT_NAME }}
+      Account_Name: ${{ Secrets.ACCOUNT_NAME }} 
+      Client_ID: ${{ Secrets.OAUTH_CLIENT_ID }} 
+      Client_Secret: ${{ Secrets.OAUTH_CLIENT_SECRET }}
+      Client_Scope: ${{ Secrets.OAUTH_CLIENT_SCOPES }}
+      Orch_Folder: ${{ Secrets.ORCH_FOLDER }}
+      FName: ""
+    needs: remove-old-artifacts
+    
+    steps:            
+      # Checkout code from this repo
+      - name: Checkout Code
+        uses: actions/checkout@v2      
+      
+      # Facilitate the UiPath CLI in the github artifacts
+      - name: Validate and Download UiPath CLI
+        run: |
+                 New-Item -Path "C:\\" -ItemType "directory" -Name "uipathcli";
+                 Invoke-WebRequest "https://www.myget.org/F/uipath-dev/api/v2/package/UiPath.CLI/1.0.7985.19721" -OutFile "C:\\uipathcli\\cli.zip";
+                 Expand-Archive -LiteralPath "C:\\uipathcli\\cli.Zip" -DestinationPath "C:\\uipathcli";
+                 
+  workflowanalyser:
+    runs-on: windows-latest
+    steps:
+    # Analyze
+    - name: workflow   
+          "C:\\uipathcli\\lib\\net461\\uipcli.exe" analyze -p ${{ github.workspace }}\project.json | Out-File -FilePath ${{ github.workspace }}\$(Get-Date -Format 'yyyy-MM-dd-HH-mm-ss')-Workflow-Analysis.json
